@@ -1,33 +1,41 @@
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { api } from '../services';
+import { api } from '../../services/';
 import { mutate } from 'swr';
 import React from 'react';
 
+type officilProps = {
+  id: string;
+  nome: string;
+  preco: number
+};
 type formProps = {
   onclose: () => void;
+  item: officilProps;
 };
 
-export const FormCategory: React.FC<formProps> = () => {
+export const FormOfficialEdit: React.FC<formProps> = ({ item }) => {
   const formik = useFormik({
     initialValues: {
-      nome: '',
+      id: item?.id,
+      nome: item?.nome,
+      preco: item?.preco,
     },
     validationSchema: yup.object({
       nome: yup.string().required('Este campo é obrigatório'),
+      preco: yup.number().required('Este campo é obrigatório'),
+      id: yup.string().required(),
     }),
     onSubmit: async (fields) => {
       try {
-        const response = await api.post('/category', fields);
-
+        const response = await api.put(`/menu/${fields?.id}`, fields);
         if (response) {
-          mutate('/category');
-          formik.resetForm();
-          toast.success('Categoria cadastrada com sucesso');
+          mutate('/menu');
+          toast.success('Actualizado actualizado com sucesso');
         }
       } catch (err: any) {
-        toast.error(err?.error?.error);
+        toast.error(err?.error?.message);
       }
     },
   });
@@ -71,35 +79,20 @@ export const FormCategory: React.FC<formProps> = () => {
                 </div> */}
               </div>
 
-              {/* <div className="mb-4.5">
+              <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Email <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Insira um email"
-                  id="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
-              </div> */}
-
-              {/* <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Telefone
+                  Preço <span className="text-meta-1">*</span>
                 </label>
                 <input
                   type="number"
-                  id="telefone"
-                  name="telefone"
-                  value={formik.values.telefone}
+                  placeholder="Insira um preço"
+                  id="preco"
+                  name="preco"
+                  value={formik.values.preco}
                   onChange={formik.handleChange}
-                  placeholder="Insira um numero de telefone"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-              </div> */}
+              </div>
 
               {/* <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
@@ -149,7 +142,7 @@ export const FormCategory: React.FC<formProps> = () => {
                 type="submit"
                 className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
               >
-                Salvar
+                Actualizar
               </button>
             </div>
           </form>

@@ -7,27 +7,29 @@ import { setCookie } from 'nookies';
 import { toast } from 'react-toastify';
 
 const SignIn = () => {
-  // document.location.hostname = '/auth/signin';
   const [isSubmiting, setIsSubmiting] = useState(false);
   let history = useNavigate();
   const formik = useFormik({
     initialValues: {
-      identifier: '',
+      email: '',
       password: '',
     },
     validationSchema: yup.object({
-      identifier: yup.string().required('Este campo é obrigatório'),
+      email: yup.string().required('Este campo é obrigatório'),
       password: yup.string().required('Este campo é obrigatório'),
     }),
     onSubmit: async (data) => {
       try {
         setIsSubmiting(true);
-        const response = await api.post('/auth/local', data);
-        const { jwt } = response.data;
-        setCookie(null, 'token', jwt, { path: '/' });
+        console.log('====================================');
+        console.log(data, "dkd  k");
+        console.log('====================================');
+        const response = await api.post('/auth', {...data, status: "Admin"});
+        const { token } = response.data;
+        setCookie(null, 'token', token, { path: '/' });
         history('/');
       } catch (err: any) {
-        toast.error(err?.response?.data?.message);
+        toast.error(err?.response?.data?.error);
       } finally {
         setTimeout(() => {
           setIsSubmiting(false);
@@ -35,6 +37,7 @@ const SignIn = () => {
       }
     },
   });
+
   return (
     // <DefaultLayout>
     <>
@@ -47,7 +50,7 @@ const SignIn = () => {
                 {/* <img className="hidden dark:block" src={Logo} alt="Logo" /> */}
                 {/* <img className="dark:hidden" src={LogoDark} alt="Logo" /> */}
                 <h2 className="text-3xl font-semibold text-primary">
-                  Restaurante app
+                  Dona Makenda
                 </h2>
               </Link>
 
@@ -193,15 +196,16 @@ const SignIn = () => {
                   <div className="relative">
                     <input
                       type="text"
-                      name="identifier"
-                      id="identifier"
+                      name="email"
+                      id="email"
+                      value={formik.values.email}
                       onChange={formik.handleChange}
                       placeholder="Insira o seu email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
-                    {formik.touched.identifier && formik.errors.identifier ? (
+                    {formik.touched.email && formik.errors.email ? (
                       <span className="text-danger">
-                        {formik.errors.identifier}
+                        {formik.errors.email}
                       </span>
                     ) : null}
 
@@ -234,13 +238,14 @@ const SignIn = () => {
                       type="password"
                       id="password"
                       name="password"
+                      value={formik.values.password}
                       onChange={formik.handleChange}
                       placeholder="6+ Caracteres"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
-                    {formik.touched.identifier && formik.errors.identifier ? (
+                    {formik.touched.password && formik.errors.password ? (
                       <span className="text-danger">
-                        {formik.errors.identifier}
+                        {formik.errors.password}
                       </span>
                     ) : null}
 
@@ -314,14 +319,14 @@ const SignIn = () => {
                   Sign in with Google
                 </button>
 
-                <div className="mt-6 text-center">
+                {/* <div className="mt-6 text-center">
                   <p>
                     Não possuis conta?{' '}
                     <Link to="/auth/signup" className="text-primary">
                       Criar conta
                     </Link>
                   </p>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>

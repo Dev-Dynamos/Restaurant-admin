@@ -4,37 +4,43 @@ import * as yup from 'yup';
 import { api } from '../services';
 import { mutate } from 'swr';
 import React from 'react';
+import useFetch from '../hooks/usefetch';
 
 type formProps = {
   onclose: () => void;
 };
 
-export const FormCategory: React.FC<formProps> = () => {
+export const FormStock: React.FC<formProps> = () => {
+  const { data: Produto } = useFetch("/product")
   const formik = useFormik({
     initialValues: {
-      nome: '',
+      quantidade: 0,
+      productoId: ''
     },
     validationSchema: yup.object({
-      nome: yup.string().required('Este campo é obrigatório'),
+      quantidade: yup.number().required('Este campo é obrigatório'),
+      productoId: yup.string().required('Este campo é obrigatório'),
     }),
     onSubmit: async (fields) => {
       try {
-        const response = await api.post('/category', fields);
-
+        const response = await api.post('/stock', fields);
         if (response) {
-          mutate('/category');
+          mutate('/stock');
           formik.resetForm();
-          toast.success('Categoria cadastrada com sucesso');
+          toast.success('Item cadastrado com sucesso');
         }
       } catch (err: any) {
-        toast.error(err?.error?.error);
+        toast.error(err?.response?.data?.error);
       }
     },
   });
 
+  console.log('====================================');
+  console.log(formik.values);
+  console.log('====================================');
   return (
     <>
-      <div className="flex  w-full flex-col overflow-scroll">
+      <div className="flex w-full flex-col overflow-scroll">
         <div className="rounded-sm bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           {/* <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
@@ -44,7 +50,7 @@ export const FormCategory: React.FC<formProps> = () => {
           <form onSubmit={formik.handleSubmit}>
             <div className="p-6.5">
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                <div className="w-full ">
+                {/* <div className="w-full ">
                   <label className="mb-2.5 block text-black dark:text-white">
                     Nome
                   </label>
@@ -57,7 +63,7 @@ export const FormCategory: React.FC<formProps> = () => {
                     onChange={formik.handleChange}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
-                </div>
+                </div> */}
 
                 {/* <div className="w-full xl:w-1/2">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -71,35 +77,40 @@ export const FormCategory: React.FC<formProps> = () => {
                 </div> */}
               </div>
 
-              {/* <div className="mb-4.5">
+              <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Email <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Insira um email"
-                  id="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
-              </div> */}
-
-              {/* <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Telefone
+                  Quantidade <span className="text-meta-1">*</span>
                 </label>
                 <input
                   type="number"
-                  id="telefone"
-                  name="telefone"
-                  value={formik.values.telefone}
+                  placeholder="Insira a quantidade"
+                  id="quantidade"
+                  name="quantidade"
+                  value={formik.values.quantidade}
                   onChange={formik.handleChange}
-                  placeholder="Insira um numero de telefone"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-              </div> */}
+              </div>
+
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Produto <span className="text-meta-1">*</span>
+                </label>
+                <select 
+                  name="productoId"
+                  id="productoId"
+                  value={formik.values.productoId}
+                  onChange={formik.handleChange}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                >
+                  <option key={""} value={""}>selecione um produto</option>
+                  {Produto?.map((item: {id: string; nome: string}) => (
+                    <>
+                      <option key={item.id} value={item.id}>{item.nome}</option>
+                    </>
+                  ))} 
+                </select>
+              </div>
 
               {/* <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">

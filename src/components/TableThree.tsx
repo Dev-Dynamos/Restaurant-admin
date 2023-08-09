@@ -9,11 +9,8 @@ type Itables = {
 
 type officilProps = {
   id: string;
-  attributes: {
-    nome: string;
-    email: string;
-    telefone: string;
-  };
+  nome: string;
+  preco: number;
 };
 const TableThree: React.FC<Itables> = ({
   heads,
@@ -46,19 +43,14 @@ const TableThree: React.FC<Itables> = ({
                 <tr key={idx} className="">
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                      {item?.attributes?.nome}
+                      {item?.nome}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                      {item?.attributes?.email}
+                      {item?.preco} Kz
                     </h5>
                   </td>{' '}
-                  <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {item?.attributes?.telefone}
-                    </h5>
-                  </td>
                   <td className="px-10">
                     <div className="flex items-center space-x-3.5">
                       <button

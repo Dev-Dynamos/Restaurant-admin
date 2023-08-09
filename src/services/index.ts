@@ -1,10 +1,8 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import nookies from "nookies";
+import axios, { AxiosInstance } from "axios";
 
 export const api: AxiosInstance = axios.create({
-    baseURL: "http://localhost:1337/api/",
+    baseURL: "http://localhost:4444",
     headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${nookies.get(null).token}`,
     },
 });

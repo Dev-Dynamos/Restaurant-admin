@@ -3,30 +3,25 @@ import useFetch from '../../hooks/usefetch';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useState } from 'react';
 import Modal from '../../components/Modal';
-import { FormOfficial } from '../../components/FormOfficial';
 import { api } from '../../services';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { FormOfficialEdit } from './EditOficial';
-import TableThreeOfficial from '../../components/TableThreeOfficial';
+import TableThreeStock from '../../components/TableThreeStock';
+import { FormStock } from '../../components/FormStock';
 
 type officilProps = {
   id: string;
-  name: string;
-  email: string;
-  telefone: string;
-  cargoId: string;
+  productoId: string;
+  quantidade: number;
 };
 
-export const Official = () => {
-  const { data: Official } = useFetch('/clerk');
-  const { data: Cargo } = useFetch('/postion');
+export const Stock = () => {
+  const { data: Stock } = useFetch('/stock');
   const [item, setItem] = useState<officilProps>({
-      email: '',
-      name: '',
-      telefone: '',
-      cargoId: '',
-      id: '',
+      productoId: "",
+      quantidade: 0,
+    id: '',
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -48,16 +43,16 @@ export const Official = () => {
     setIsOpenEdit(false);
   };
 
-  async function onRemove(item: { id: string; name: string}) {
+  async function onRemove(item: { id: string;  }) {
     const resp = confirm(
-      `Tens certeza que queres eliminar o(a) ${item?.name} `
+      `Tens certeza que queres eliminar o(a) ${item?.produto?.nome} `
     );
     if (resp) {
       try {
-        const response = await api.delete(`/clerk/${item?.id}`);
+        const response = await api.delete(`/stock/${item?.id}`);
         if (response) {
-          mutate('/clerk');
-          toast.success('Funcionario deletado com sucesso');
+          mutate('/stock');
+          toast.success('item deletado com sucesso');
         }
       } catch (err: any) {
         toast.error(err?.error?.message);
@@ -65,22 +60,19 @@ export const Official = () => {
     }
   }
 
-  console.log(Official);
-  console.log(Cargo);
-
   return (
     <DefaultLayout>
       <Modal isOpen={isOpen} onClose={closeModal}>
-        <h2 className="mb-4 text-xl font-bold">Adicionar Funcionario</h2>
-        <FormOfficial onclose={closeModal} />
+        <h2 className="mb-4 text-xl font-bold">Adicionar Producto</h2>
+        <FormStock onclose={closeModal} />
       </Modal>
 
       <Modal isOpen={isOpenEdit} onClose={closeModalEdit}>
-        <h2 className="mb-4 text-xl font-bold">Actulizar Funcionario</h2>
+        <h2 className="mb-4 text-xl font-bold">Actulizar Menu</h2>
         <FormOfficialEdit onclose={closeModalEdit} item={item} />
       </Modal>
 
-      <Breadcrumb pageName="Funcionarios" />
+      <Breadcrumb pageName="Stock" />
 
       {/* <!-- ====== Calendar Section Start ====== --> */}
       <div className="flex flex-1 justify-end py-2">
@@ -92,9 +84,9 @@ export const Official = () => {
         </button>
       </div>
       <div className="w-full max-w-full rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <TableThreeOfficial
-          heads={['Nome', 'Email', 'Telefone', 'cargo', 'Acção']}
-          data={Official}
+        <TableThreeStock
+          heads={['Nome', 'Preço', 'Categoria', 'quantidade', 'Acção']}
+          data={Stock}
           onRemove={onRemove}
           openModalEdit={openModalEdit}
         />

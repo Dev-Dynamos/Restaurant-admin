@@ -3,7 +3,7 @@ import ChartFour from '../components/ChartFour';
 import ChartOne from '../components/ChartOne.tsx';
 import ChartThree from '../components/ChartThree.tsx';
 import ChartTwo from '../components/ChartTwo.tsx';
-import DefaultLayout from '../layout/DefaultLayout';
+import DefaultLayout from '../layout/DefaultLayout.tsx';
 
 const Chart = () => {
   return (

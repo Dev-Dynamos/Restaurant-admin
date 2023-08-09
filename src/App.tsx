@@ -19,9 +19,15 @@ import { getUserInfo } from './pages/Authentication/services';
 import { Official } from './pages/official';
 import { Category } from './pages/Category';
 import { Pedidos } from './pages/pedidos';
+import PrivateRoute from './routes/PrivateRoute';
+import PublicRoute from './routes/PublicRoute';
+import { Menu } from './pages/menu';
+import { Produtos } from './pages/produtos';
+import { Position } from './pages/Position';
+import { Stock } from './pages/stock';
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [ search, setSearch ] = useState("")
   const preloader = document.getElementById('preloader');
 
   if (preloader) {
@@ -40,12 +46,16 @@ function App() {
   ) : (
     <>
       <Routes>
-        <Route path="/" element={<ECommerce />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/official" element={<Official />} />
-        <Route path="/Category" element={<Category />} />
-        <Route path="/pedidos" element={<Pedidos />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/" element={<PrivateRoute><ECommerce /></PrivateRoute>} />
+        <Route path="/Menus" element={<PrivateRoute><Menu  /></PrivateRoute>} />
+        <Route path="/official" element={<PrivateRoute><Official /></PrivateRoute>} />
+        <Route path="/Category" element={<PrivateRoute><Category /></PrivateRoute>} />
+        <Route path="/position" element={<PrivateRoute><Position/></PrivateRoute>} />
+        <Route path="/pedidos" element={<PrivateRoute><Pedidos /></PrivateRoute>} />
+        <Route path="/usuarios" element={<PrivateRoute><Pedidos /></PrivateRoute>} />
+        <Route path="/produtos" element={<PrivateRoute><Produtos /></PrivateRoute>} />
+        <Route path="/stock" element={<PrivateRoute><Stock /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/forms/form-elements" element={<FormElements />} />
         <Route path="/forms/form-layout" element={<FormLayout />} />
         <Route path="/tables" element={<Tables />} />
@@ -53,7 +63,7 @@ function App() {
         <Route path="/chart" element={<Chart />} />
         <Route path="/ui/alerts" element={<Alerts />} />
         <Route path="/ui/buttons" element={<Buttons />} />
-        <Route path="/auth/signin" element={<SignIn />} />
+        <Route path="/auth/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
         <Route path="/auth/signup" element={<SignUp />} />
         <Route
           path="*"

@@ -9,7 +9,7 @@ type formProps = {
   onclose: () => void;
 };
 
-export const FormCategory: React.FC<formProps> = () => {
+export const FormPosition: React.FC<formProps> = () => {
   const formik = useFormik({
     initialValues: {
       nome: '',
@@ -19,12 +19,12 @@ export const FormCategory: React.FC<formProps> = () => {
     }),
     onSubmit: async (fields) => {
       try {
-        const response = await api.post('/category', fields);
+        const response = await api.post('/position', fields);
 
         if (response) {
-          mutate('/category');
+          mutate('/position');
           formik.resetForm();
-          toast.success('Categoria cadastrada com sucesso');
+          toast.success('Cargo cadastrado com sucesso');
         }
       } catch (err: any) {
         toast.error(err?.error?.error);

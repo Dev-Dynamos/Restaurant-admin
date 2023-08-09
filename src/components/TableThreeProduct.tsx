@@ -1,33 +1,29 @@
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import React from 'react';
-import {RiCloseFill} from "react-icons/ri"
-import { MdDone, MdOutlineDone } from 'react-icons/md';
-import { AiOutlineFileDone, AiTwotoneCloseCircle } from 'react-icons/ai';
+import { AiOutlineEdit } from 'react-icons/ai';
 type Itables = {
   heads: string[];
   data: officilProps[];
   onRemove: (item: officilProps) => void;
   openModalEdit: (item: officilProps) => void;
-  onSucess: (item:officilProps) => void
-  onCancel: (item:officilProps) => void
-  onEntregue: (item:officilProps) => void
-  onRecusado: (item:officilProps)=>void
 };
 
 type officilProps = {
   id: string;
-
+  nome: string;
+  preco: number;
+  categoria?: {
+    nome: string
+  },
+  ficheiro?: {
+    caminho: string
+  }
 };
-const TableThreePedidos: React.FC<Itables> = ({
+const TableThreeProduct: React.FC<Itables> = ({
   heads,
   data,
-  onCancel,
-  onSucess,
-  onEntregue,
-  onRecusado
+  onRemove,
+  openModalEdit,
 }) => {
-  // const [item, setItem] = useState({});
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -51,39 +47,24 @@ const TableThreePedidos: React.FC<Itables> = ({
               <>
                 <tr key={idx} className="">
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium flex items-center gap-2 text-black dark:text-white">
-                      <img src={item?.produto?.ficheiro?.caminho} className='rounded-md' alt={item?.produto?.nome} width={100} srcset="" />{item?.produto?.nome}
+                    <h5 className="font-medium text-black dark:text-white flex items-center gap-2 rounded-md">
+                      <img src={item?.ficheiro?.caminho} alt="" width={100} />
+                      {item?.nome}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                      {item?.cliente?.nome}
+                      {item?.preco} Kz
                     </h5>
                   </td>{' '}
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                      {
-                        item?.localizacao
-                      }
+                      {item?.categoria?.nome}
                     </h5>
-                  </td>
-                  <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {
-                        item?.status?.toUpperCase()
-                      }
-                    </h5>
-                  </td>
-                  {/* <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {
-                        item?.status
-                      }
-                    </h5>
-                  </td> */}
+                  </td>{' '}
                   <td className="px-10">
                     <div className="flex items-center space-x-3.5">
-                      {/* <button
+                      <button
                         className="hover:text-primary"
                         onClick={() => onRemove(item)}
                       >
@@ -112,25 +93,13 @@ const TableThreePedidos: React.FC<Itables> = ({
                             fill=""
                           />
                         </svg>
-                      </button> */}
-                      <button className='text-green-200' onClick={() => onSucess(item)}>
-                        <MdOutlineDone />
                       </button>
-                      <button onClick={() => onCancel(item)}>
-                        <RiCloseFill/>
-                      </button>
-                      <button onClick={() => onEntregue(item)}>
-                        <AiOutlineFileDone/>
-                      </button>
-                      <button onClick={() => onRecusado(item)}>
-                        <AiTwotoneCloseCircle/>
-                      </button>
-                      {/* <button
+                      <button
                         className="hover:text-primary"
                         onClick={() => openModalEdit(item)}
                       >
-                        <MdDone />
-                      </button> */}
+                        <AiOutlineEdit />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -143,4 +112,4 @@ const TableThreePedidos: React.FC<Itables> = ({
   );
 };
 
-export default TableThreePedidos;
+export default TableThreeProduct;

@@ -1,16 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import UserOne from '../images/user/user-01.png';
 import useFetch from '../hooks/usefetch';
-import { getUserInfo } from '../pages/Authentication/services';
+import { getUserInfo, logout } from '../pages/Authentication/services';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate()
+  
+  const user = getUserInfo() as { sub: string}
 
-  const pop = getUserInfo();
-  const { data: User } = useFetch(`/users/${pop?.id}`);
-  console.log(User);
+  function LogOut (){
+    logout()
+    navigate("/auth/signin")
+  }
+
+  console.log('====================================');
+  console.log(user);
+  console.log('====================================');
+  const { data: User } = useFetch(`/admin`);
+
+  const useLogged = User?.find((item: { id: string }) => item?.id === user?.sub)
+
+  console.log('====================================');
+  console.log(useLogged, "ododod");
+  console.log('====================================');
+
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -51,13 +67,13 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {User?.username}
+            {useLogged?.name}
           </span>
-          <span className="block text-xs">{User?.email}</span>
+          <span className="block text-xs">{useLogged?.email}</span>
         </span>
 
         <span className="flex h-12 w-12 items-center justify-center rounded-full border-2">
-          {User?.username[0]?.toUpperCase()}
+          {useLogged?.name[0]?.toUpperCase()}
         </span>
 
         <svg
@@ -161,7 +177,7 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button onClick={() => LogOut()} className="flex  items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
           <svg
             className="fill-current"
             width="22"

@@ -1,33 +1,38 @@
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { api } from '../services';
+import { api } from '../../services';
 import { mutate } from 'swr';
 import React from 'react';
 
+type officilProps = {
+  id?: string;
+  nome: string;
+};
 type formProps = {
   onclose: () => void;
+  item: officilProps;
 };
 
-export const FormCategory: React.FC<formProps> = () => {
+export const FormCategoryEdit: React.FC<formProps> = ({ item }) => {
   const formik = useFormik({
     initialValues: {
-      nome: '',
+      id: item?.id,
+      nome: item?.nome,
     },
     validationSchema: yup.object({
       nome: yup.string().required('Este campo é obrigatório'),
+      id: yup.string().required(),
     }),
     onSubmit: async (fields) => {
       try {
-        const response = await api.post('/category', fields);
-
-        if (response) {
-          mutate('/category');
-          formik.resetForm();
-          toast.success('Categoria cadastrada com sucesso');
+        const response = await api.put(`/position/${fields?.id}`, fields);
+        if (response?.status === 200) {
+          mutate('/position');
+          toast.success('Cargo actualizado com sucesso');
         }
       } catch (err: any) {
-        toast.error(err?.error?.error);
+        toast.error(err?.error?.message);
       }
     },
   });
@@ -149,7 +154,7 @@ export const FormCategory: React.FC<formProps> = () => {
                 type="submit"
                 className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
               >
-                Salvar
+                Actualizar
               </button>
             </div>
           </form>

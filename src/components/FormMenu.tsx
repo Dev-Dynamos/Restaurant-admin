@@ -9,25 +9,27 @@ type formProps = {
   onclose: () => void;
 };
 
-export const FormCategory: React.FC<formProps> = () => {
+export const FormMenu: React.FC<formProps> = () => {
   const formik = useFormik({
     initialValues: {
       nome: '',
+      preco: 0
     },
     validationSchema: yup.object({
       nome: yup.string().required('Este campo é obrigatório'),
+      preco: yup.number().required('Este campo é obrigatório'),
     }),
     onSubmit: async (fields) => {
       try {
-        const response = await api.post('/category', fields);
+        const response = await api.post('/menu', fields);
 
         if (response) {
-          mutate('/category');
+          mutate('/menu');
           formik.resetForm();
-          toast.success('Categoria cadastrada com sucesso');
+          toast.success('Menu cadastrado com sucesso');
         }
       } catch (err: any) {
-        toast.error(err?.error?.error);
+        toast.error(err?.error?.message);
       }
     },
   });
@@ -71,35 +73,20 @@ export const FormCategory: React.FC<formProps> = () => {
                 </div> */}
               </div>
 
-              {/* <div className="mb-4.5">
+              <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Email <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Insira um email"
-                  id="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
-              </div> */}
-
-              {/* <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Telefone
+                  Preço <span className="text-meta-1">*</span>
                 </label>
                 <input
                   type="number"
-                  id="telefone"
-                  name="telefone"
-                  value={formik.values.telefone}
+                  placeholder="Insira o valor do preço"
+                  id="preco"
+                  name="preco"
+                  value={formik.values.preco}
                   onChange={formik.handleChange}
-                  placeholder="Insira um numero de telefone"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-              </div> */}
+              </div>
 
               {/* <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">

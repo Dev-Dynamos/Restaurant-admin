@@ -1,5 +1,4 @@
 import Breadcrumb from '../../components/Breadcrumb';
-import TableThree from '../../components/TableThree';
 import useFetch from '../../hooks/usefetch';
 import DefaultLayout from '../../layout/DefaultLayout';
 import { useState } from 'react';
@@ -7,29 +6,19 @@ import Modal from '../../components/Modal';
 import { api } from '../../services';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
-import { FormOfficialEdit } from '../official/EditOficial';
 import { FormCategory } from '../../components/FormCategory';
 import TableThreeCategory from '../../components/TableThreeCategory';
 import { FormCategoryEdit } from './EditCategory';
 
 type officilProps = {
-  id: string;
-  attributes: {
+    id?: string;
     nome: string;
-    email: string;
-    telefone: string;
-  };
 };
 
 export const Category = () => {
-  const { data: Categorias } = useFetch('/categorias');
+  const { data: Categorias } = useFetch('/category');
   const [item, setItem] = useState<officilProps>({
-    attributes: {
-      email: '',
       nome: '',
-      telefone: '',
-    },
-    id: '',
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -53,15 +42,15 @@ export const Category = () => {
     setIsOpenEdit(false);
   };
 
-  async function onRemove(item: { id: string; attributes: { nome: string } }) {
+  async function onRemove(item: { id: string; nome: string  }) {
     const resp = confirm(
-      `Tens certeza que queres eliminar o(a) ${item?.attributes?.nome} `
+      `Tens certeza que queres eliminar o(a) ${item?.nome} `
     );
     if (resp) {
       try {
-        const response = await api.delete(`/categorias/${item?.id}`);
+        const response = await api.delete(`/category/${item?.id}`);
         if (response) {
-          mutate('/categorias');
+          mutate('/category');
           toast.success('Categoria deletada com sucesso');
         }
       } catch (err: any) {
@@ -96,7 +85,7 @@ export const Category = () => {
       <div className="w-full max-w-full rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <TableThreeCategory
           heads={['Nome', 'Acção']}
-          data={Categorias?.data}
+          data={Categorias}
           onRemove={onRemove}
           openModalEdit={openModalEdit}
         />

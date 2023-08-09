@@ -4,14 +4,14 @@ import * as yup from 'yup';
 import { api } from '../../services/';
 import { mutate } from 'swr';
 import React from 'react';
+import useFetch from '../../hooks/usefetch';
 
 type officilProps = {
   id: string;
-  attributes: {
-    nome: string;
-    email: string;
-    telefone: string;
-  };
+  name: string;
+  email: string;
+  telefone: string;
+  cargoId: string;
 };
 type formProps = {
   onclose: () => void;
@@ -19,29 +19,31 @@ type formProps = {
 };
 
 export const FormOfficialEdit: React.FC<formProps> = ({ item }) => {
+  const { data: Cargos } = useFetch("/position")
   const formik = useFormik({
     initialValues: {
       id: item?.id,
-      nome: item?.attributes?.nome,
-      email: item?.attributes?.email,
-      telefone: item?.attributes?.telefone,
+      name: item?.name,
+      email: item?.email,
+      telefone: item?.telefone,
+      cargoId: item?.cargoId
     },
     validationSchema: yup.object({
-      nome: yup.string().required('Este campo é obrigatório'),
+      name: yup.string().required('Este campo é obrigatório'),
       email: yup.string().email().required('Este campo é obrigatório'),
       telefone: yup.string().required('Este campo é obrigatório'),
+      cargoId: yup.string().required('Este campo é obrigatório'),
       id: yup.string().required(),
     }),
     onSubmit: async (fields) => {
       try {
-        const newData = { data: { ...fields, cargo: 3 } };
-        const response = await api.put(`/funcionarios/${fields?.id}`, newData);
-        if (response?.status === 200) {
-          mutate('/funcionarios');
+        const response = await api.put(`/clerk/${fields?.id}`, fields);
+        if (response) {
+          mutate('/clerk');
           toast.success('funcionario actualizado com sucesso');
         }
       } catch (err: any) {
-        toast.error(err?.error?.message);
+        toast.error(err?.error?.error);
       }
     },
   });
@@ -65,9 +67,9 @@ export const FormOfficialEdit: React.FC<formProps> = ({ item }) => {
                   <input
                     type="text"
                     placeholder="Insira um nome"
-                    id="nome"
-                    name="nome"
-                    value={formik.values.nome}
+                    id="name"
+                    name="name"
+                    value={formik.values.name}
                     onChange={formik.handleChange}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
@@ -105,7 +107,7 @@ export const FormOfficialEdit: React.FC<formProps> = ({ item }) => {
                   Telefone
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   id="telefone"
                   name="telefone"
                   value={formik.values.telefone}
@@ -113,6 +115,25 @@ export const FormOfficialEdit: React.FC<formProps> = ({ item }) => {
                   placeholder="Insira um numero de telefone"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
+              </div>
+
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Cargo
+                </label>
+                <select 
+                  name= "cargoId"
+                  id='cargoId'
+                  onChange={formik.handleChange}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                >
+                  <option value="">Selecione um cargo</option>
+                  {Cargos?.map((item: {id: string; nome: string}) => (
+                    <>
+                      <option value={item?.id} key={item?.id}>{item?.nome}</option>
+                    </>
+                  ))}
+                </select>
               </div>
 
               {/* <div className="mb-4.5">

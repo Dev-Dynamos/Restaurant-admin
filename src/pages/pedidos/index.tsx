@@ -13,26 +13,16 @@ import TableThreePedidos from '../../components/TableThreePedidos';
 
 type officilProps = {
   id: string;
-  attributes: {
-    nome: string;
-    email: string;
-    telefone: string;
-  };
 };
 
 export const Pedidos = () => {
-  const { data: Pedidos } = useFetch('/pedidos');
+  const { data: Pedidos } = useFetch('/order');
+  console.log(Pedidos);
+  
 
   console.log(Pedidos);
 
-  const [item, setItem] = useState<officilProps>({
-    attributes: {
-      email: '',
-      nome: '',
-      telefone: '',
-    },
-    id: '',
-  });
+  const [item, setItem] = useState<officilProps>({id: ''});
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
 
@@ -44,25 +34,89 @@ export const Pedidos = () => {
     setIsOpen(false);
   };
 
-  const openModalEdit = (item: officilProps) => {
-    setItem(item);
+  const openModalEdit = async (item: officilProps) => {
+    const resp = confirm(
+      `Tens certeza que queres confirmar que este pedido ${item?.produto?.nome} foi entregue`
+    );
+    if (resp) {
+      try {
+        const response = await api.put(`/order/${item?.id}`, {status: "aceite"});
+        if (response) {
+          mutate('/order');
+          toast.success('Pedido confirmado com sucesso');
+        }
+      } catch (err: any) {
+        toast.error(err?.error?.message);
+      }
+    }
+    setIsOpenEdit(true);
+  };
+  const onReject = async (item: officilProps) => {
+    const resp = confirm(
+      `Tens certeza que queres rejeitar este pedido ${item?.produto?.nome}`
+    );
+    if (resp) {
+      try {
+        const response = await api.put(`/order/${item?.id}`, {status: "negado"});
+        if (response) {
+          mutate('/order');
+          toast.success('Pedido rejeitado com sucesso');
+        }
+      } catch (err: any) {
+        toast.error(err?.error?.message);
+      }
+    }
     setIsOpenEdit(true);
   };
 
+  const onConfirm = async (item: officilProps) => {
+    const resp = confirm(
+      `Tens certeza que queres confirmar este pedido como entregue ${item?.produto?.nome}`
+    );
+    if (resp) {
+      try {
+        const response = await api.put(`/order/${item?.id}`, {status: "entregue"});
+        if (response) {
+          mutate('/order');
+          toast.success('Pedido rejeitado com sucesso');
+        }
+      } catch (err: any) {
+        toast.error(err?.error?.message);
+      }
+    }
+    setIsOpenEdit(true);
+  };
+  const onCancel = async (item: officilProps) => {
+    const resp = confirm(
+      `Tens certeza que queres anular este pedido ${item?.produto?.nome}`
+    );
+    if (resp) {
+      try {
+        const response = await api.put(`/order/${item?.id}`, {status: "cancelado"});
+        if (response) {
+          mutate('/order');
+          toast.success('Pedido rejeitado com sucesso');
+        }
+      } catch (err: any) {
+        toast.error(err?.error?.message);
+      }
+    }
+    setIsOpenEdit(true);
+  };
   const closeModalEdit = () => {
     setIsOpenEdit(false);
   };
 
-  async function onRemove(item: { id: string; attributes: { nome: string } }) {
+  async function onRemove(item: { id: string; produto: { nome: string } }) {
     const resp = confirm(
-      `Tens certeza que queres eliminar o(a) ${item?.attributes?.nome} `
+      `Tens certeza que queres eliminar este pedido ${item?.produto?.nome} `
     );
     if (resp) {
       try {
-        const response = await api.delete(`/categorias/${item?.id}`);
+        const response = await api.delete(`/order/${item?.id}`);
         if (response) {
-          mutate('/categorias');
-          toast.success('Categoria deletada com sucesso');
+          mutate('/order');
+          toast.success('Pedido deletado com sucesso');
         }
       } catch (err: any) {
         toast.error(err?.error?.message);
@@ -95,10 +149,12 @@ export const Pedidos = () => {
       </div> */}
       <div className="w-full max-w-full rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <TableThreePedidos
-          heads={['Nome', 'Estimava de entrega', 'Pedido Emitido em', 'Acção']}
-          data={Pedidos?.data}
-          onRemove={onRemove}
-          openModalEdit={openModalEdit}
+          heads={['Nome do Produto', 'Nome do Cliente', 'Localização', 'Status', 'Acção']}
+          data={Pedidos}
+          onSucess={openModalEdit}
+          onCancel={onReject}
+          onEntregue={onConfirm}
+          onRecusado={onCancel}
         />
       </div>
       {/* <!-- ====== Calendar Section End ====== --> */}

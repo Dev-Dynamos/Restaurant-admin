@@ -1,33 +1,43 @@
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { api } from '../services';
+import { api } from '../../services';
 import { mutate } from 'swr';
 import React from 'react';
+import useFetch from '../../hooks/usefetch';
 
+type officilProps = {
+  id: string;
+  productoId: string;
+  quantidade: number;
+};
 type formProps = {
   onclose: () => void;
+  item: officilProps;
 };
 
-export const FormCategory: React.FC<formProps> = () => {
+export const FormOfficialEdit: React.FC<formProps> = ({ item }) => {
+  const {data: Produto} = useFetch("/product")
   const formik = useFormik({
     initialValues: {
-      nome: '',
+      id: item?.id,
+      productoId: item?.productoId,
+      quantidade: item?.quantidade
     },
     validationSchema: yup.object({
-      nome: yup.string().required('Este campo é obrigatório'),
+      quantidade: yup.number().required('Este campo é obrigatório'),
+      productoId: yup.string().required(),
+      id: yup.string().required(),
     }),
     onSubmit: async (fields) => {
       try {
-        const response = await api.post('/category', fields);
-
+        const response = await api.put(`/stock/${fields?.id}`, fields);
         if (response) {
-          mutate('/category');
-          formik.resetForm();
-          toast.success('Categoria cadastrada com sucesso');
+          mutate('/stock');
+          toast.success('item actualizado com sucesso');
         }
       } catch (err: any) {
-        toast.error(err?.error?.error);
+        toast.error(err?.error?.message);
       }
     },
   });
@@ -43,63 +53,40 @@ export const FormCategory: React.FC<formProps> = () => {
           </div> */}
           <form onSubmit={formik.handleSubmit}>
             <div className="p-6.5">
-              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                <div className="w-full ">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Nome
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Insira um nome"
-                    id="nome"
-                    name="nome"
-                    value={formik.values.nome}
-                    onChange={formik.handleChange}
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                  />
-                </div>
-
-                {/* <div className="w-full xl:w-1/2">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Last name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter your last name"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                  />
-                </div> */}
-              </div>
-
-              {/* <div className="mb-4.5">
+              <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Email <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Insira um email"
-                  id="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
-              </div> */}
-
-              {/* <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Telefone
+                  Quatidade
                 </label>
                 <input
                   type="number"
-                  id="telefone"
-                  name="telefone"
-                  value={formik.values.telefone}
+                  id="quantidade"
+                  name="quantidade"
+                  value={formik.values.quantidade}
                   onChange={formik.handleChange}
-                  placeholder="Insira um numero de telefone"
+                  placeholder="Insira a quantidade"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                 />
-              </div> */}
+              </div>
+
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black dark:text-white">
+                  Produto <span className="text-meta-1">*</span>
+                </label>
+                <select 
+                  name="productoId"
+                  id="productoId"
+                  value={formik.values.productoId}
+                  onChange={formik.handleChange}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                >
+                  <option key={""} value={""}>selecione um produto</option>
+                  {Produto?.map((item: {id: string; nome: string}) => (
+                    <>
+                      <option key={item.id} value={item.id}>{item.nome}</option>
+                    </>
+                  ))} 
+                </select>
+              </div>
 
               {/* <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
@@ -149,7 +136,7 @@ export const FormCategory: React.FC<formProps> = () => {
                 type="submit"
                 className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
               >
-                Salvar
+                Actualizar
               </button>
             </div>
           </form>

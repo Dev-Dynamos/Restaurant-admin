@@ -14,16 +14,6 @@ import DefaultLayout from '../../layout/DefaultLayout.tsx';
 import { getUserInfo } from '../Authentication/services/index.ts';
 
 const ECommerce = () => {
-  const pop = getUserInfo() as { id: string };
-  const navigate = useNavigate();
-  const { data: User } = useFetch(`/users/${pop?.id}`);
-  console.log(User);
-
-  if (!pop) {
-    navigate('/auth/signin');
-    return <></>;
-  }
-
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -33,7 +23,7 @@ const ECommerce = () => {
         <CardFour />
       </div>
 
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+      {/* <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <ChartOne />
         <ChartTwo />
         <ChartThree />
@@ -41,8 +31,8 @@ const ECommerce = () => {
         <div className="col-span-12 xl:col-span-8">
           <TableOne />
         </div>
-        <ChatCard />
-      </div>
+        <ChatCard /> */}
+      {/* </div> */}
     </DefaultLayout>
   );
 };

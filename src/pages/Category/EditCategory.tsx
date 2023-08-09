@@ -6,12 +6,8 @@ import { mutate } from 'swr';
 import React from 'react';
 
 type officilProps = {
-  id: string;
-  attributes: {
-    nome: string;
-    email: string;
-    telefone: string;
-  };
+  id?: string;
+  nome: string;
 };
 type formProps = {
   onclose: () => void;
@@ -22,7 +18,7 @@ export const FormCategoryEdit: React.FC<formProps> = ({ item }) => {
   const formik = useFormik({
     initialValues: {
       id: item?.id,
-      nome: item?.attributes?.nome,
+      nome: item?.nome,
     },
     validationSchema: yup.object({
       nome: yup.string().required('Este campo é obrigatório'),
@@ -30,10 +26,9 @@ export const FormCategoryEdit: React.FC<formProps> = ({ item }) => {
     }),
     onSubmit: async (fields) => {
       try {
-        const newData = { data: { ...fields } };
-        const response = await api.put(`/categorias/${fields?.id}`, newData);
+        const response = await api.put(`/category/${fields?.id}`, fields);
         if (response?.status === 200) {
-          mutate('/categorias');
+          mutate('/category');
           toast.success('categoria actualizada com sucesso');
         }
       } catch (err: any) {

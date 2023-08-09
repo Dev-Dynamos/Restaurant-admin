@@ -73,7 +73,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/">
           {/* <img src={Logo} alt="Logo" /> */}
-          <h2 className="text-3xl font-semibold text-white">Restaurante</h2>
+          <h2 className="text-3xl font-semibold text-white  ">Dona Makenda</h2>
         </NavLink>
 
         <button
@@ -233,7 +233,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/pedidos"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('pedidos') && 'bg-graydark dark:bg-meta-4'
+                    (pathname === '/pedidos' ||
+                      pathname.includes('pedidos')) &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <MdOutlineRequestPage />
@@ -244,7 +246,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/official"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('funcionarios') &&
+                    pathname.includes('official') &&
                     'bg-graydark dark:bg-meta-4'
                   }`}
                 >
@@ -254,9 +256,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <NavLink
-                  to="/calendar"
+                  to="/Menus"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('menus') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('Menus') && 'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <MdRestaurantMenu />
@@ -266,7 +268,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Calendar --> */}
 
               {/* <!-- Menu Item Profile --> */}
-              <li>
+              {/* <li>
                 <NavLink
                   to="/profile"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -292,13 +294,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Perfil
                 </NavLink>
-              </li>
+              </li> */}
 
               <li>
                 <NavLink
                   to="/Category"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('perfil') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('Category') && 'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <TbCategory />
@@ -306,10 +308,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li>
 
+              <li>
+                <NavLink
+                  to="/position"
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('position') && 'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <TbCategory />
+                  Cargo
+                </NavLink>
+              </li>
+
               {/* <!-- Menu Item Profile --> */}
               <li>
                 <NavLink
-                  to="/4"
+                  to="/produtos"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('produtos') &&
                     'bg-graydark dark:bg-meta-4'
@@ -319,9 +333,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Produtos
                 </NavLink>
               </li>
+
               <li>
                 <NavLink
-                  to="/3"
+                  to="/stock"
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('stock') &&
+                    'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <MdProductionQuantityLimits />
+                  Stock
+                </NavLink>
+              </li>
+              {/* <li>
+                <NavLink
+                  to="/usuarios"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('usuarios') &&
                     'bg-graydark dark:bg-meta-4'
@@ -346,10 +373,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Usuarios
                 </NavLink>
-              </li>
+              </li> */}
 
               {/* <!-- Menu Item Forms --> */}
-              <SidebarLinkGroup
+              {/* <SidebarLinkGroup
                 activeCondition={
                   pathname === '/forms' || pathname.includes('forms')
                 }
@@ -419,7 +446,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
                       <div
                         className={`translate transform overflow-hidden ${
                           !open && 'hidden'
@@ -450,15 +476,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div>
-                      {/* <!-- Dropdown Menu End --> */}
                     </React.Fragment>
                   );
                 }}
-              </SidebarLinkGroup>
+              </SidebarLinkGroup> */}
               {/* <!-- Menu Item Forms --> */}
 
               {/* <!-- Menu Item Tables --> */}
-              <li>
+              {/* <li>
                 <NavLink
                   to="/tables"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -492,11 +517,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Tables
                 </NavLink>
-              </li>
+              </li> */}
               {/* <!-- Menu Item Tables --> */}
 
               {/* <!-- Menu Item Settings --> */}
-              <li>
+              {/* <li>
                 <NavLink
                   to="/settings"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -535,19 +560,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Settings
                 </NavLink>
-              </li>
+              </li> */}
               {/* <!-- Menu Item Settings --> */}
             </ul>
           </div>
 
           {/* <!-- Others Group --> */}
-          <div>
+          {/* <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               OTHERS
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* <!-- Menu Item Chart --> */}
               <li>
                 <NavLink
                   to="/chart"
@@ -587,9 +611,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Chart
                 </NavLink>
               </li>
-              {/* <!-- Menu Item Chart --> */}
 
-              {/* <!-- Menu Item Ui Elements --> */}
               <SidebarLinkGroup
                 activeCondition={pathname === '/ui' || pathname.includes('ui')}
               >
@@ -661,7 +683,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
                       <div
                         className={`translate transform overflow-hidden ${
                           !open && 'hidden'
@@ -692,14 +713,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div>
-                      {/* <!-- Dropdown Menu End --> */}
                     </React.Fragment>
                   );
                 }}
               </SidebarLinkGroup>
-              {/* <!-- Menu Item Ui Elements --> */}
 
-              {/* <!-- Menu Item Auth Pages --> */}
               <SidebarLinkGroup
                 activeCondition={
                   pathname === '/auth' || pathname.includes('auth')
@@ -769,7 +787,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
                       <div
                         className={`translate transform overflow-hidden ${
                           !open && 'hidden'
@@ -800,16 +817,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div>
-                      {/* <!-- Dropdown Menu End --> */}
                     </React.Fragment>
                   );
                 }}
               </SidebarLinkGroup>
-              {/* <!-- Menu Item Auth Pages --> */}
             </ul>
-          </div>
+          </div> */}
         </nav>
-        {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>
   );
